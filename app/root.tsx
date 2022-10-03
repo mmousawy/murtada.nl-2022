@@ -1,5 +1,4 @@
-import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { HeadersFunction, LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -9,7 +8,6 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import { getUser } from "./session.server";
 import globalStyles from "./styles/index.css";
 
 export const meta: MetaFunction = () => ({
@@ -22,11 +20,11 @@ export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: globalStyles }];
 };
 
-export async function loader({ request }: LoaderArgs) {
-  return json({
-    user: await getUser(request),
-  });
-}
+export const headers: HeadersFunction = () => {
+  return {
+    "Cache-Control": "s-maxage=360, stale-while-revalidate=3600",
+  };
+};
 
 export default function App() {
   return (
